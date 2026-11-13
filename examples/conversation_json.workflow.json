@@ -1,0 +1,145 @@
+{
+  "last_node_id": 7,
+  "last_link_id": 6,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "PrimitiveStringMultiline",
+      "pos": [40, 390],
+      "size": [300, 130],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [{"name": "STRING", "type": "STRING", "links": [1]}],
+      "title": "Region · 地区独立输入",
+      "properties": {"Node name for S&R": "PrimitiveStringMultiline"},
+      "widgets_values": ["[locale=en-AU]"]
+    },
+    {
+      "id": 2,
+      "type": "DMCanvasConversationJSONV2",
+      "pos": [400, 60],
+      "size": [400, 210],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {"name": "conversation", "label": "conversation", "type": "STRING", "link": 5},
+        {"name": "region", "type": "STRING", "link": 1}
+      ],
+      "outputs": [
+        {"name": "json", "type": "STRING", "links": [2], "slot_index": 0},
+        {"name": "image_order", "type": "STRING", "links": [3, 6], "slot_index": 1},
+        {"name": "warnings", "type": "STRING", "links": [4], "slot_index": 2},
+        {"name": "case_count", "type": "INT", "links": null, "slot_index": 3}
+      ],
+      "properties": {"Node name for S&R": "DMCanvasConversationJSONV2"},
+      "widgets_values": ["auto", 1]
+    },
+    {
+      "id": 3,
+      "type": "PreviewAny",
+      "pos": [880, 60],
+      "size": [440, 460],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [{"name": "source", "type": "*", "link": 2}],
+      "outputs": [],
+      "title": "JSON · 最终格式预览",
+      "properties": {"Node name for S&R": "PreviewAny"},
+      "widgets_values": []
+    },
+    {
+      "id": 4,
+      "type": "PreviewAny",
+      "pos": [880, 560],
+      "size": [440, 150],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [{"name": "source", "type": "*", "link": 3}],
+      "outputs": [],
+      "title": "Image Order · 源图传输顺序",
+      "properties": {"Node name for S&R": "PreviewAny"},
+      "widgets_values": []
+    },
+    {
+      "id": 5,
+      "type": "PreviewAny",
+      "pos": [360, 460],
+      "size": [440, 160],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [{"name": "source", "type": "*", "link": 4}],
+      "outputs": [],
+      "title": "Warnings · 上下文检查",
+      "properties": {"Node name for S&R": "PreviewAny"},
+      "widgets_values": []
+    },
+    {
+      "id": 6,
+      "type": "PrimitiveStringMultiline",
+      "pos": [40, 60],
+      "size": [300, 260],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [{"name": "STRING", "type": "STRING", "links": [5]}],
+      "title": "Conversation · 上下文独立输入",
+      "properties": {"Node name for S&R": "PrimitiveStringMultiline"},
+      "widgets_values": ["user: [1][2] 生成一张合照\nai: [3]\nuser: [4][5] 让这两个人也加入之前的合照"]
+    },
+    {
+      "id": 7,
+      "type": "DMCanvasConversationImageOrder",
+      "pos": [1420, 60],
+      "size": [380, 470],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {"name": "image_order", "type": "STRING", "link": 6},
+        {"name": "source_1", "type": "IMAGE", "link": null},
+        {"name": "source_2", "type": "IMAGE", "link": null},
+        {"name": "source_3", "type": "IMAGE", "link": null},
+        {"name": "source_4", "type": "IMAGE", "link": null},
+        {"name": "source_5", "type": "IMAGE", "link": null},
+        {"name": "source_6", "type": "IMAGE", "link": null},
+        {"name": "source_7", "type": "IMAGE", "link": null},
+        {"name": "source_8", "type": "IMAGE", "link": null},
+        {"name": "source_9", "type": "IMAGE", "link": null},
+        {"name": "source_10", "type": "IMAGE", "link": null}
+      ],
+      "outputs": [
+        {"name": "canvas_image_1", "type": "IMAGE", "links": null, "slot_index": 0},
+        {"name": "canvas_image_2", "type": "IMAGE", "links": null, "slot_index": 1},
+        {"name": "canvas_image_3", "type": "IMAGE", "links": null, "slot_index": 2},
+        {"name": "canvas_image_4", "type": "IMAGE", "links": null, "slot_index": 3},
+        {"name": "canvas_image_5", "type": "IMAGE", "links": null, "slot_index": 4},
+        {"name": "canvas_image_6", "type": "IMAGE", "links": null, "slot_index": 5},
+        {"name": "canvas_image_7", "type": "IMAGE", "links": null, "slot_index": 6},
+        {"name": "canvas_image_8", "type": "IMAGE", "links": null, "slot_index": 7},
+        {"name": "canvas_image_9", "type": "IMAGE", "links": null, "slot_index": 8},
+        {"name": "canvas_image_10", "type": "IMAGE", "links": null, "slot_index": 9}
+      ],
+      "properties": {"Node name for S&R": "DMCanvasConversationImageOrder"},
+      "widgets_values": []
+    }
+  ],
+  "links": [
+    [1, 1, 0, 2, 1, "STRING"],
+    [2, 2, 0, 3, 0, "STRING"],
+    [3, 2, 1, 4, 0, "STRING"],
+    [4, 2, 2, 5, 0, "STRING"],
+    [5, 6, 0, 2, 0, "STRING"],
+    [6, 2, 1, 7, 0, "STRING"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}
