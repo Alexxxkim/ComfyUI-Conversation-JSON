@@ -39,6 +39,27 @@ class ConversationJSON:
                 json.dumps(order), "\n".join(warnings), count)
 
 
+class ConversationJSONPrefixV2(ConversationJSON):
+    DESCRIPTION = "V2：保留原版转换规则；从当前请求及历史中每条用户消息的开头移除 Create a sticker of / Remix，并在该消息中添加 prefix：R1 / R2。大小写须完全匹配，不要求前缀后有空格。"
+
+    def convert(self, conversation, input_format="auto", case_index=1, region=""):
+        result = super().convert(conversation, input_format, case_index, region)
+        payload = json.loads(result[0])
+        prefix_changed = False
+        for message in [payload["current_request"], *payload["history"]]:
+            if message["role"] != "user":
+                continue
+            for prefix_text, prefix_code in (("Create a sticker of", "R1"), ("Remix", "R2")):
+                if message["text"].startswith(prefix_text):
+                    message["text"] = message["text"][len(prefix_text):].lstrip()
+                    message["prefix"] = prefix_code
+                    prefix_changed = True
+                    break
+        if prefix_changed:
+            return (json.dumps(payload, ensure_ascii=False, indent=2), *result[1:])
+        return result
+
+
 class ConversationImageOrder:
     CATEGORY = CATEGORY
     FUNCTION = "reorder"
@@ -71,9 +92,11 @@ class ConversationImageOrder:
 
 NODE_CLASS_MAPPINGS = {
     "DMCanvasConversationJSONV2": ConversationJSON,
+    "DMCanvasConversationJSONPrefixV2": ConversationJSONPrefixV2,
     "DMCanvasConversationImageOrder": ConversationImageOrder,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "DMCanvasConversationJSONV2": "Conversation JSON · 对话上下文转 JSON",
+    "DMCanvasConversationJSONPrefixV2": "Conversation JSON V2 · 对话上下文转 JSON（前缀识别）",
     "DMCanvasConversationImageOrder": "Conversation Image Order · 对话图片排序",
 }

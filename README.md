@@ -9,7 +9,38 @@
 ## 节点
 
 - `Conversation JSON · 对话上下文转 JSON`，分类 `DM Canvas/Conversation`。
+- `Conversation JSON V2 · 对话上下文转 JSON（前缀识别）`，同分类；新增版本，不替换原节点。
 - `Conversation Image Order · 对话图片排序`，同分类；用于实际图片接线与 JSON 标签保持一致。
+
+### V2 当前请求与历史用户消息前缀识别
+
+V2 使用独立节点类型 `DMCanvasConversationJSONPrefixV2`，输入、控件、四个输出与原节点一致。原节点 `DMCanvasConversationJSONV2` 的名称、类型和转换行为不变；旧工作流不会自动切换到新版本。
+
+统一检查 `current_request.text` 和 `history` 中每条 `role: user` 消息的 `text` 开头，大小写须完全匹配：
+
+| 前缀 | 新增字段 |
+| --- | --- |
+| `Create a sticker of` | `"prefix": "R1"` |
+| `Remix` | `"prefix": "R2"` |
+
+每条用户消息独立识别：命中时，从该消息的 `text` 删除一次完整前缀和紧随的开头空白，并将 `prefix` 放在该消息中，与 `role` / `text` 同级。前缀后不要求有空格，例如 `Remix[图1]`、`Create a sticker of[图1]` 也会识别。仅有前缀时，删除后 `text` 是空字符串，不补造指令。不匹配的消息保持原样，不新增 `prefix`，不输出 `null` 或空值。所有用户消息均未命中时，完整输出与原节点一致。`make a sticker of` 不匹配。
+
+同一对话新增一轮后，之前的用户请求进入 `history` 时仍会删除前缀并带有对应的 `prefix`；即使当前请求没有前缀，也会处理历史中的命中消息。每条消息独立判断，历史的 `prefix` 不会自动继承到当前请求。不处理 `assistant` 消息，不删除正文中间出现的前缀；图片标签、图片排序、地区、警告及 case 选择逻辑继续使用原版规则。除命中前缀后的开头空白外，剩余正文的空白、换行和图片相邻位置保持不变，包括正文中的 `make it a sticker`。
+
+例如输入 `user: Remix[图1] Make it a sticker`，`json` 输出：
+
+```json
+{
+  "current_request": {
+    "role": "user",
+    "text": "[canvas_image_1] Make it a sticker",
+    "prefix": "R2"
+  },
+  "history": []
+}
+```
+
+`image_order` 为 `[1]`。用户提供的 12 条独立输入及完整模拟输出见 `examples/prefix_v2_outputs.json`。
 
 `conversation` 是独立必填 STRING 输入口：将完整历史或简版对话粘贴到单独的多行文本节点，再把 STRING 输出连接到 `conversation`。`region` 是独立可选 STRING 输入口，格式 `[locale=en-AU]`；不连接时省略 `locale`。两个输入互不影响，最后一条消息必须是 user 的规则只针对 `conversation`。
 
