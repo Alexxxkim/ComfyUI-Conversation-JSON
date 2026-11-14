@@ -1,6 +1,6 @@
 import { app } from "../../../scripts/app.js";
 
-const NODE_TYPE = "DMCanvasConversationJSONV2";
+const NODE_TYPES = new Set(["DMCanvasConversationJSONV2", "DMCanvasConversationJSONPrefixV2"]);
 
 function restoreLegacyControls(node, savedNode) {
     const values = savedNode?.widgets_values;
@@ -14,7 +14,7 @@ function restoreLegacyControls(node, savedNode) {
 }
 
 function ensureConversationLabel(node) {
-    if (node?.comfyClass !== NODE_TYPE && node?.type !== NODE_TYPE) return;
+    if (!NODE_TYPES.has(node?.comfyClass) && !NODE_TYPES.has(node?.type)) return;
     const input = node.inputs?.find((slot) => slot.name === "conversation");
     if (!input) return;
     input.label = "conversation";
@@ -30,7 +30,7 @@ function ensureConversationLabel(node) {
 app.registerExtension({
     name: "DMCanvas.ConversationInputLabels",
     beforeRegisterNodeDef(nodeType, nodeData) {
-        if (nodeData.name !== NODE_TYPE) return;
+        if (!NODE_TYPES.has(nodeData.name)) return;
         const originalConfigure = nodeType.prototype.onConfigure;
         nodeType.prototype.onConfigure = function (...argumentsList) {
             const result = originalConfigure?.apply(this, argumentsList);
