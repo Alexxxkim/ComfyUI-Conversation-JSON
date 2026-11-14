@@ -1,0 +1,158 @@
+[
+  {
+    "example": 1,
+    "input": "Create a sticker of a blonde haired girl sleeping",
+    "outputs": {
+      "json": {
+        "current_request": {"role": "user", "text": "a blonde haired girl sleeping", "prefix": "R1"},
+        "history": []
+      },
+      "image_order": [],
+      "warnings": "",
+      "case_count": 1
+    }
+  },
+  {
+    "example": 2,
+    "input": "make a sticker of a blonde haired girl sleeping",
+    "outputs": {
+      "json": {
+        "current_request": {"role": "user", "text": "make a sticker of a blonde haired girl sleeping"},
+        "history": []
+      },
+      "image_order": [],
+      "warnings": "",
+      "case_count": 1
+    }
+  },
+  {
+    "example": 3,
+    "input": "Create a sticker of a hamster with steam coming out of his ears coz hes so angy and the japanese angry emoji thing on his face",
+    "outputs": {
+      "json": {
+        "current_request": {"role": "user", "text": "a hamster with steam coming out of his ears coz hes so angy and the japanese angry emoji thing on his face", "prefix": "R1"},
+        "history": []
+      },
+      "image_order": [],
+      "warnings": "",
+      "case_count": 1
+    }
+  },
+  {
+    "example": 4,
+    "input": "Remix [图1] Make it a sticker",
+    "outputs": {
+      "json": {
+        "current_request": {"role": "user", "text": "[canvas_image_1] Make it a sticker", "prefix": "R2"},
+        "history": []
+      },
+      "image_order": [1],
+      "warnings": "",
+      "case_count": 1
+    }
+  },
+  {
+    "example": 5,
+    "input": "Create a sticker of [图1] wearing a dress",
+    "outputs": {
+      "json": {
+        "current_request": {"role": "user", "text": "[canvas_image_1] wearing a dress", "prefix": "R1"},
+        "history": []
+      },
+      "image_order": [1],
+      "warnings": "",
+      "case_count": 1
+    }
+  },
+  {
+    "example": 6,
+    "input": "Create a sticker of [图1] with a thick moustache",
+    "outputs": {
+      "json": {
+        "current_request": {"role": "user", "text": "[canvas_image_1] with a thick moustache", "prefix": "R1"},
+        "history": []
+      },
+      "image_order": [1],
+      "warnings": "",
+      "case_count": 1
+    }
+  },
+  {
+    "example": 7,
+    "input": "Create a sticker of [图1] with a thick moustache and make it a sticker",
+    "outputs": {
+      "json": {
+        "current_request": {"role": "user", "text": "[canvas_image_1] with a thick moustache and make it a sticker", "prefix": "R1"},
+        "history": []
+      },
+      "image_order": [1],
+      "warnings": "",
+      "case_count": 1
+    }
+  },
+  {
+    "example": 8,
+    "input": "Create a sticker of me holding the blue think[图1] [图2]",
+    "outputs": {
+      "json": {
+        "current_request": {"role": "user", "text": "me holding the blue think[canvas_image_1] [canvas_image_2]", "prefix": "R1"},
+        "history": []
+      },
+      "image_order": [1, 2],
+      "warnings": "",
+      "case_count": 1
+    }
+  },
+  {
+    "example": 9,
+    "input": "Create a sticker of [图1] [图2]",
+    "outputs": {
+      "json": {
+        "current_request": {"role": "user", "text": "[canvas_image_1] [canvas_image_2]", "prefix": "R1"},
+        "history": []
+      },
+      "image_order": [1, 2],
+      "warnings": "",
+      "case_count": 1
+    }
+  },
+  {
+    "example": 10,
+    "input": "Create a sticker of [图1] [图2]",
+    "outputs": {
+      "json": {
+        "current_request": {"role": "user", "text": "[canvas_image_1] [canvas_image_2]", "prefix": "R1"},
+        "history": []
+      },
+      "image_order": [1, 2],
+      "warnings": "",
+      "case_count": 1
+    }
+  },
+  {
+    "example": 11,
+    "input": "Create a sticker of [图1] [图2]drinking beer",
+    "outputs": {
+      "json": {
+        "current_request": {"role": "user", "text": "[canvas_image_1] [canvas_image_2]drinking beer", "prefix": "R1"},
+        "history": []
+      },
+      "image_order": [1, 2],
+      "warnings": "",
+      "case_count": 1
+    }
+  },
+  {
+    "example": 12,
+    "input": "[图1] [图2]make it a sticker",
+    "outputs": {
+      "json": {
+        "current_request": {"role": "user", "text": "[canvas_image_1] [canvas_image_2]make it a sticker"},
+        "history": []
+      },
+      "image_order": [1, 2],
+      "warnings": "",
+      "case_count": 1
+    }
+  }
+]
