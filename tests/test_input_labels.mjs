@@ -33,6 +33,28 @@ test("new conversation sockets have an explicit visible label", async () => {
     assert.equal(input.link, 5);
 });
 
+test("V2 sockets and configure handlers use the same label repair", async () => {
+    const extension = await loadExtension();
+    const input = { name: "conversation", type: "STRING", link: 9 };
+    const node = { comfyClass: "DMCanvasConversationJSONPrefixV2", inputs: [input] };
+    extension.nodeCreated(node);
+    assert.equal(input.label, "conversation");
+    assert.equal(input.localized_name, "conversation");
+    assert.equal(input.link, 9);
+    class PrefixNode {
+        constructor() {
+            this.type = "DMCanvasConversationJSONPrefixV2";
+            this.inputs = [{ name: "conversation", widget: { name: "conversation" }, link: 7 }];
+        }
+    }
+    extension.beforeRegisterNodeDef(PrefixNode, { name: "DMCanvasConversationJSONPrefixV2" });
+    const configured = new PrefixNode();
+    configured.onConfigure({ widgets_values: ["auto", 1] });
+    assert.equal(configured.inputs[0].label, "conversation");
+    assert.equal(configured.inputs[0].widget, undefined);
+    assert.equal(configured.inputs[0].link, 7);
+});
+
 test("legacy widget sockets retain their text and connection when relabeled", async () => {
     const extension = await loadExtension();
     const widget = { name: "conversation", value: "user: [1] 画猫" };

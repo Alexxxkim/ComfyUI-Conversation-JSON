@@ -240,8 +240,11 @@ class ConversationTests(unittest.TestCase):
 class NodeTests(unittest.TestCase):
     def test_registration_does_not_override_existing_nodes(self):
         self.assertEqual(set(PACKAGE.NODE_CLASS_MAPPINGS), {
-            "DMCanvasConversationJSONV2", "DMCanvasConversationImageOrder",
+            "DMCanvasConversationJSONV2", "DMCanvasConversationJSONPrefixV2", "DMCanvasConversationImageOrder",
         })
+        self.assertEqual(CONVERTER.__name__, "ConversationJSON")
+        self.assertEqual(PACKAGE.NODE_DISPLAY_NAME_MAPPINGS["DMCanvasConversationJSONV2"],
+                         "Conversation JSON · 对话上下文转 JSON")
         self.assertEqual(set(PACKAGE.NODE_CLASS_MAPPINGS), set(PACKAGE.NODE_DISPLAY_NAME_MAPPINGS))
 
     def test_converter_widgets_sockets_and_output_contract(self):

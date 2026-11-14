@@ -7,6 +7,8 @@ from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
+from test_prefix_v2 import EXAMPLES, HISTORY_CASE, HISTORY_PAYLOAD
+
 
 SERVER_URL = os.environ.get("DMCANVAS_COMFYUI_TEST_URL", "").rstrip("/")
 
@@ -34,9 +36,9 @@ class ServerTests(unittest.TestCase):
             time.sleep(0.05)
         self.fail("Local test prompt did not finish within 30 seconds.")
 
-    def converter_prompt(self, text, region=None):
+    def converter_prompt(self, text, region=None, converter_type="DMCanvasConversationJSONV2"):
         prompt = {
-            "1": {"class_type": "DMCanvasConversationJSONV2", "inputs": {
+            "1": {"class_type": converter_type, "inputs": {
                 "conversation": ["5", 0], "input_format": "auto", "case_index": 1,
             }},
             "2": {"class_type": "PreviewAny", "inputs": {"source": ["1", 0]}},
@@ -59,6 +61,45 @@ class ServerTests(unittest.TestCase):
             "tooltip": "单独连接地区文本，如 [locale=en-AU]；不连接则不输出 locale。",
         }])
         self.assertEqual(schemas["DMCanvasConversationImageOrder"]["output"], ["IMAGE"] * 10)
+
+    def test_v2_has_the_same_schema_and_a_distinct_display_name(self):
+        schemas = request_json("/object_info")
+        original = schemas["DMCanvasConversationJSONV2"]
+        updated = schemas["DMCanvasConversationJSONPrefixV2"]
+        for key in ("input", "input_order", "output", "output_name", "category"):
+            self.assertEqual(updated[key], original[key])
+        self.assertEqual(original["display_name"], "Conversation JSON · 对话上下文转 JSON")
+        self.assertEqual(updated["display_name"], "Conversation JSON V2 · 对话上下文转 JSON（前缀识别）")
+
+    def test_v2_all_twelve_user_examples_run_on_the_server(self):
+        for index, (source, text, prefix, order) in enumerate(EXAMPLES, 1):
+            with self.subTest(example=index):
+                result = self.execute(self.converter_prompt(
+                    f"user: {source}", converter_type="DMCanvasConversationJSONPrefixV2"
+                ))
+                self.assertEqual(result["status"]["status_str"], "success", result["status"])
+                current_request = {"role": "user", "text": text}
+                if prefix is not None:
+                    current_request["prefix"] = prefix
+                self.assertEqual(json.loads(result["outputs"]["2"]["text"][0]), {
+                    "current_request": current_request, "history": [],
+                })
+                self.assertEqual(json.loads(result["outputs"]["3"]["text"][0]), order)
+
+    def test_original_node_still_preserves_prefixes_on_the_server(self):
+        result = self.execute(self.converter_prompt("user: Create a sticker of a cat"))
+        self.assertEqual(result["status"]["status_str"], "success", result["status"])
+        self.assertEqual(json.loads(result["outputs"]["2"]["text"][0]), {
+            "current_request": {"role": "user", "text": "Create a sticker of a cat"}, "history": [],
+        })
+
+    def test_v2_processes_user_provided_history_on_the_server(self):
+        result = self.execute(self.converter_prompt(
+            HISTORY_CASE, converter_type="DMCanvasConversationJSONPrefixV2"
+        ))
+        self.assertEqual(result["status"]["status_str"], "success", result["status"])
+        self.assertEqual(json.loads(result["outputs"]["2"]["text"][0]), HISTORY_PAYLOAD)
+        self.assertEqual(json.loads(result["outputs"]["3"]["text"][0]), [2, 1])
 
     def test_simple_case_runs_with_external_conversation_and_region(self):
         result = self.execute(self.converter_prompt(
