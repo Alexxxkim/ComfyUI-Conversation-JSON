@@ -4,6 +4,10 @@
 
 ## 在 BA 房间还原
 
+**V3 可选风格**：从本仓库 `main` 更新 Custom Node，重启 BA 房间后端、刷新画布并搜索 `Conversation JSON V3`。V2 节点和原工作流保持不变。V3 新增 `style_name`、`style_prompt` 两个可选 STRING 接线口：名称为空时四路输出与 V2 完全相同；有名称时在 JSON 顶层添加 `"style": {"name": "3D Emoji", "prompt": "…"}`。仅填名称时 `prompt` 为 `""`。
+
+[V3 示例工作流](examples/style_v3.workflow.json) · [V3 独立安装包](ComfyUI-Conversation-JSON-V3-BA.zip)。更新本仓库与安装独立包二选一，避免重复注册 V3。
+
 安装完整 Custom Node 仓库，保留根目录 Python 文件、`web/` 前端扩展和示例工作流。`conversation` / `region` 是带名称的左侧 `STRING` 连接口；`input_format` / `case_index` 是节点内控件。不要改成 Script / Inline Python，也不要只复制 `.py` 文件。安装与验收步骤见 [BYTEARTIST_INSTALL.md](BYTEARTIST_INSTALL.md)。BA 房间尚未实测，不将本地验证等同于 BA 验证。
 
 ## 节点

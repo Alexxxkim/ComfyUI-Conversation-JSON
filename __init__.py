@@ -1,6 +1,12 @@
 from .nodes import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS
+from .style_v3 import ConversationJSONV3
 
 
+NODE_CLASS_MAPPINGS = {**NODE_CLASS_MAPPINGS, "DMCanvasConversationJSONV3": ConversationJSONV3}
+NODE_DISPLAY_NAME_MAPPINGS = {
+    **NODE_DISPLAY_NAME_MAPPINGS,
+    "DMCanvasConversationJSONV3": "Conversation JSON V3 · 对话上下文转 JSON（可选风格）",
+}
 WEB_DIRECTORY = "./web"
 
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS", "WEB_DIRECTORY"]
