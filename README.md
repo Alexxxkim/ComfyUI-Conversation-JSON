@@ -4,7 +4,9 @@
 
 ## 在 BA 房间还原
 
-**V4 与 Meme Hit**：更新本仓库 `main`，重启 ComfyUI 后端并刷新画布，即可搜索 `Conversation JSON V4` 和 `Meme Hit`。旧节点继续保留，不必分别安装两个独立包。Meme Hit 的动态字段需要支持 `DynamicCombo` 的 ComfyUI 后端与前端（本地验证版本：0.39.2 / 1.53.10）；缺少该后端接口时只注册转换器及原有节点。
+**BA 请搜索 `Meme Hit BA`**：更新本仓库 `main`，重启房间后端并刷新画布。`Meme Hit BA · 梗参考信息（兼容版）` 与 `Conversation JSON V4` 同在 `DM Canvas/Conversation` 下，不依赖 `DynamicCombo` 或自定义前端。连接 `Meme Hit` 输出到 V4 的 `Meme 01` 或 `Meme 02`。固定表单中，`off` 忽略全部字段、输出空文本；`append` 忽略图号；`reuse` 才读取图号。未用字段无需清空。
+
+支持原生动态表单的 ComfyUI 仍可使用原来的 `Meme Hit` 节点；缺少该后端接口时，原节点 ID 也会注册为固定表单。若导入了动态表单保存的旧工作流，请核对原图号和命中原话，或换用新的 `Meme Hit BA` 节点。
 
 将原始对话文本接入 V4 的 `conversation`。`Meme 01` 和 `Meme 02` 都可留空，也可以分别连接一个 Meme Hit：`off` 不传参考；`append` 填视觉描述，库图由 V4 编号；`reuse` 先填视觉描述，再填原对话图号（如 `[图4]` 填 `4`）。两种启用模式均可选填命中的用户原话。`json` 给 VLM，`attachment_plan` 用于核对实际图片顺序；两个节点都不传输图片本身。
 
