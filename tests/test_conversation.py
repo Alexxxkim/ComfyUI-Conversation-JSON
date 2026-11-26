@@ -241,12 +241,31 @@ class NodeTests(unittest.TestCase):
     def test_registration_does_not_override_existing_nodes(self):
         self.assertEqual(set(PACKAGE.NODE_CLASS_MAPPINGS), {
             "DMCanvasConversationJSONV2", "DMCanvasConversationJSONPrefixV2", "DMCanvasConversationImageOrder",
-            "DMCanvasConversationJSONV3",
+            "DMCanvasConversationJSONV3", "DMCanvasConversationJSONV4", "DMCanvasMemeHit", "DMCanvasMemeHitBA",
         })
         self.assertEqual(CONVERTER.__name__, "ConversationJSON")
         self.assertEqual(PACKAGE.NODE_DISPLAY_NAME_MAPPINGS["DMCanvasConversationJSONV2"],
                          "Conversation JSON · 对话上下文转 JSON")
         self.assertEqual(set(PACKAGE.NODE_CLASS_MAPPINGS), set(PACKAGE.NODE_DISPLAY_NAME_MAPPINGS))
+
+    def test_meme_hit_ba_static_fields_and_v4_wire(self):
+        node = PACKAGE.NODE_CLASS_MAPPINGS["DMCanvasMemeHitBA"]()
+        schema = node.INPUT_TYPES()
+        fields = {**schema["required"], **schema["optional"]}
+        self.assertEqual(list(fields), ["mode", "visual_core", "source_image", "matched_text"])
+        off, append, reuse = fields["mode"][0]
+        self.assertEqual(node.build(off, "Retained", 4, "retained"), ("",))
+        added, = node.build(append, " Bent wrist. ", 9, " Salt Bae ")
+        reused, = node.build(reuse, "Side-eye.", 4, " ")
+        self.assertEqual(json.loads(added), {"mode": "append", "visual_core": "Bent wrist.", "matched_text": "Salt Bae"})
+        self.assertEqual(json.loads(reused), {"mode": "reuse", "visual_core": "Side-eye.", "source_image": 4})
+        for enabled in [append, reuse]:
+            with self.assertRaises(ValueError):
+                node.build(enabled, " ")
+        converter = PACKAGE.NODE_CLASS_MAPPINGS["DMCanvasConversationJSONV4"]()
+        results = converter.convert("user: Remix [图4] Do Salt Bae", meme_01=reused, meme_02=added)
+        self.assertEqual(json.loads(results[4]), [{"image_ref": "canvas_image_1", "source_image": 4},
+                                                 {"image_ref": "canvas_image_2", "reference_from": "meme_02"}])
 
     def test_converter_widgets_sockets_and_output_contract(self):
         inputs = CONVERTER.INPUT_TYPES()
