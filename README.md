@@ -4,6 +4,12 @@
 
 ## 在 BA 房间还原
 
+**V4 与 Meme Hit**：更新本仓库 `main`，重启 ComfyUI 后端并刷新画布，即可搜索 `Conversation JSON V4` 和 `Meme Hit`。旧节点继续保留，不必分别安装两个独立包。Meme Hit 的动态字段需要支持 `DynamicCombo` 的 ComfyUI 后端与前端（本地验证版本：0.39.2 / 1.53.10）；缺少该后端接口时只注册转换器及原有节点。
+
+将原始对话文本接入 V4 的 `conversation`。`Meme 01` 和 `Meme 02` 都可留空，也可以分别连接一个 Meme Hit：`off` 不传参考；`append` 填视觉描述，库图由 V4 编号；`reuse` 先填视觉描述，再填原对话图号（如 `[图4]` 填 `4`）。两种启用模式均可选填命中的用户原话。`json` 给 VLM，`attachment_plan` 用于核对实际图片顺序；两个节点都不传输图片本身。
+
+[V4 双梗联调工作流](examples/meme_v4.workflow.json) · [Meme Hit 三态预览工作流](examples/meme_hit_modes.workflow.json)。示例接的是文本预览，不需要模型和图片。
+
 **V3 可选风格**：从本仓库 `main` 更新 Custom Node，重启 BA 房间后端、刷新画布并搜索 `Conversation JSON V3`。V2 节点和原工作流保持不变。V3 新增 `style_name`、`style_prompt` 两个可选 STRING 接线口：名称为空时四路输出与 V2 完全相同；有名称时在 JSON 顶层添加 `"style": {"name": "3D Emoji", "prompt": "…"}`。仅填名称时 `prompt` 为 `""`。
 
 [V3 示例工作流](examples/style_v3.workflow.json) · [V3 独立安装包](ComfyUI-Conversation-JSON-V3-BA.zip)。更新本仓库与安装独立包二选一，避免重复注册 V3。
